@@ -2,14 +2,25 @@
 import random
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
 from app.domains.base import DomainGenerator, FeedItem, get_domain, registry, register
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _cleanup_fake_domain():
+    # Register the fake domain only for this module's tests, then remove it so
+    # it never leaks into the global registry regardless of collection/run order.
+    register(_FakeDomain)
+    yield
+    from app.domains.base import _REGISTRY
+    _REGISTRY.pop("fake", None)
 
 
 def _dt(s: int) -> datetime:
     return datetime(2026, 7, 14, 12, 0, 0, tzinfo=UTC) + timedelta(seconds=s)
 
 
-@register
 class _FakeDomain(DomainGenerator):
     domain_key = "fake"
     default_params = {"widgets": ["a", "b"]}

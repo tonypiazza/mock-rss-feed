@@ -177,6 +177,14 @@ curl -sX POST http://localhost:8000/feeds \
 - **Self-expiry.** Feeds and keys share a TTL and vanish automatically; polling a
   feed never extends its lifetime.
 
+> **These are streaming simulations, not stable RSS documents.** Each poll returns
+> only the items generated since your previous poll, and item GUIDs are unique per
+> poll — a feed reader will see every item as new each time rather than deduping
+> against earlier fetches. Note also that a poll gap larger than
+> `MAX_ITEMS_PER_RESPONSE × interval_seconds` discards the surplus (only the most
+> recent items are returned). For reproducible, assertion-friendly output, a
+> deterministic mode is planned (see below).
+
 ---
 
 ## API reference
@@ -243,6 +251,13 @@ uv sync              # install dependencies
 uv run pytest        # run the test suite
 uv run pytest -v     # verbose
 ```
+
+## Roadmap
+
+- **Deterministic / CI mode** — an optional seed (and/or snapshot mode) so feeds
+  return reproducible items, making the service suitable for strict, assertion-based
+  tests of feed consumers in CI pipelines. Smoke testing (fetch + parse) works today;
+  this adds exact item-level reproducibility.
 
 ---
 

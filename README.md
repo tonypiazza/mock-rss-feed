@@ -151,6 +151,10 @@ category pool:
 curl -s http://localhost:8000/domains | jq
 ```
 
+**Adding your own domain is easy** — one small self-registering file, no other
+wiring. See [`app/domains/README.md`](app/domains/README.md) for the
+`DomainGenerator` interface and a worked example.
+
 ### Categories
 
 Every item carries a realistic mix of `<category>` tags. Each domain has a default

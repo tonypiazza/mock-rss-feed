@@ -1,0 +1,11 @@
+# .dockerignore
+.git
+.venv
+__pycache__
+tests
+docs
+*.pyc
+.python-version
+mock-rss-feed.webp
+LICENSE
+README.md

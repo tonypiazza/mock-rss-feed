@@ -4,16 +4,23 @@ import time
 import pytest
 
 from app.cache.memory import MemoryCache
+from app.cache.redis import RedisCache
 
 
 def make_memory():
     return MemoryCache(sizes={"feeds": 100, "keys": 100})
 
 
-BACKENDS = [make_memory]
+def make_redis():
+    import fakeredis
+
+    return RedisCache(client=fakeredis.FakeStrictRedis(decode_responses=True))
 
 
-@pytest.fixture(params=BACKENDS)
+BACKENDS = [make_memory, make_redis]
+
+
+@pytest.fixture(params=BACKENDS, ids=["memory", "redis"])
 def cache(request):
     return request.param()
 

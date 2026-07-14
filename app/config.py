@@ -9,7 +9,6 @@ from dataclasses import dataclass
 class Settings:
     port: int
     feed_ttl_seconds: int
-    cache_backend: str
     redis_url: str | None
     max_feeds: int
     max_keys: int
@@ -28,7 +27,6 @@ class Settings:
         enabled = e.get("ENABLED_DOMAINS")
         object.__setattr__(self, "port", _int("PORT", 80))
         object.__setattr__(self, "feed_ttl_seconds", _int("FEED_TTL_SECONDS", 3600))
-        object.__setattr__(self, "cache_backend", e.get("CACHE_BACKEND", "memory"))
         object.__setattr__(self, "redis_url", e.get("REDIS_URL") or None)
         object.__setattr__(self, "max_feeds", _int("MAX_FEEDS", 100))
         object.__setattr__(self, "max_keys", _int("MAX_KEYS", 100))
@@ -42,5 +40,6 @@ class Settings:
         )
         object.__setattr__(self, "public_base_url", e.get("PUBLIC_BASE_URL") or None)
 
-        if self.cache_backend == "redis" and not self.redis_url:
-            raise ValueError("REDIS_URL is required when CACHE_BACKEND=redis")
+    @property
+    def use_redis(self) -> bool:
+        return self.redis_url is not None

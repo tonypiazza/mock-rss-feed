@@ -217,7 +217,8 @@ All configuration is via environment variables:
 | `PUBLIC_BASE_URL` | *(unset)* | Base URL for absolute links in feed XML. Falls back to the forwarded request scheme + host. |
 | `FEED_TTL_SECONDS` | `3600` | Cache TTL, and the size of the first-poll seed window. |
 | `REDIS_URL` | *(unset)* | Redis-compatible connection URL (e.g. Aiven for Valkey `rediss://…`). When set, the Redis backend is used automatically; otherwise the in-memory backend is used. |
-| `MAX_FEEDS` / `MAX_KEYS` | `100` | Capacity of the in-memory backend. |
+| `MAX_FEEDS` | `100` | Max number of feeds kept in memory at once; past this, the soonest-to-expire feed is evicted. In-memory backend only (ignored when `REDIS_URL` is set). |
+| `MAX_KEYS` | `100` | Max number of API keys kept in memory at once; same eviction behavior and Redis note as `MAX_FEEDS`. |
 | `DEFAULT_INTERVAL_SECONDS` | `30` | Default mean seconds between items. |
 | `DEFAULT_VARIANCE_PCT` | `20` | Default jitter around the mean rate. |
 | `MAX_ITEMS_PER_RESPONSE` | `200` | Upper bound on items returned per poll. |
